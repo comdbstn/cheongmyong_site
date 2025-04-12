@@ -1,6 +1,5 @@
 'use client';
 
-import Image from "next/image";
 import { motion } from "framer-motion";
 import { useState, useEffect } from "react";
 import AnimatedSection from "./components/AnimatedSection";
@@ -11,7 +10,6 @@ export default function Home() {
   const totalSections = 9;
   const [isVideoVisible, setIsVideoVisible] = useState(false);
   const [isBackgroundOpen, setIsBackgroundOpen] = useState(false);
-  const [isVideoLoaded, setIsVideoLoaded] = useState(false);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -54,7 +52,6 @@ export default function Home() {
               loop
               playsInline
               className="absolute inset-0 w-full h-full object-cover"
-              onLoadedData={() => setIsVideoLoaded(true)}
             >
               <source src="/background.mp4" type="video/mp4" />
             </video>
