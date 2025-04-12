@@ -61,21 +61,17 @@ export default function Home() {
           <div className={`w-full h-full transition-opacity duration-1000 ${
             isVideoVisible ? 'opacity-100' : 'opacity-0'
           }`}>
-            <video
-              ref={videoRef}
-              key="background-video"
-              autoPlay
-              muted
-              loop
-              playsInline
-              className="absolute inset-0 w-full h-full object-cover"
-              preload="auto"
-            >
-              <source src="/background.mp4" type="video/mp4" />
-            </video>
-            <div className={`absolute inset-0 bg-black transition-opacity duration-1000 ${
-              isBackgroundOpen ? 'opacity-50' : 'opacity-100'
-            }`} />
+            <div className="relative w-full h-full">
+              <div className="absolute inset-0 bg-black/50 z-10" />
+              <video
+                src="/background.mp4"
+                autoPlay
+                muted
+                loop
+                playsInline
+                className="absolute inset-0 w-full h-full object-cover"
+              />
+            </div>
           </div>
         </motion.div>
       </div>
@@ -91,7 +87,14 @@ export default function Home() {
         <section key={index} className="h-screen flex items-center justify-center bg-black text-white relative snap-start">
           {index === 2 && (
             <div className="absolute inset-0 z-0 opacity-70">
-              <ImageSlider images={memoryImages} interval={4000} />
+              <motion.div
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ duration: 1 }}
+                className="w-full h-full"
+              >
+                <ImageSlider images={memoryImages} />
+              </motion.div>
             </div>
           )}
           <div className={`absolute inset-0 z-10 ${index === 2 ? 'bg-black/60' : ''}`} />
