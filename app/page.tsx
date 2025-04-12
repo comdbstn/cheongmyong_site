@@ -39,15 +39,6 @@ export default function Home() {
 
   // 이미지 슬라이더용 이미지 배열 - 실제 이미지 경로 수정
   const memoryImages = Array.from({ length: 24 }, (_, i) => `/images/memories/image${i + 1}.png`);
-  
-  // 슬라이더 텍스트
-  const sliderTexts = [
-    "청명 1주년",
-    "그 시간들을 기억합니다",
-    "음악과 열정",
-    "함께했던 무대",
-    "그리고 청춘"
-  ];
 
   // 이미지 프리로딩
   useEffect(() => {
