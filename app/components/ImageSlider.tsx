@@ -28,7 +28,7 @@ export default function ImageSlider({ images }: ImageSliderProps) {
         fill
         className="object-cover"
         priority={currentIndex === 0}
-        onLoadingComplete={() => setIsLoaded(true)}
+        onLoad={() => setIsLoaded(true)}
       />
     </div>
   );
