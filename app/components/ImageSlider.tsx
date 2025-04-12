@@ -20,12 +20,13 @@ export default function ImageSlider({ images }: ImageSliderProps) {
   }, [images.length]);
 
   return (
-    <div className="relative w-full h-full">
+    <div className="relative w-full h-[100vh]">
       <div className="absolute inset-0 bg-black/60 z-10" />
       <Image
         src={images[currentIndex]}
         alt={`Memory ${currentIndex + 1}`}
         fill
+        sizes="100vw"
         className="object-cover"
         priority={currentIndex === 0}
         onLoad={() => setIsLoaded(true)}
