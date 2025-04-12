@@ -26,7 +26,8 @@ export default function ImageSlider({ images }: ImageSliderProps) {
         src={images[currentIndex]}
         alt={`Memory ${currentIndex + 1}`}
         fill
-        sizes="100vw"
+        sizes="(max-width: 768px) 100vw, (max-width: 1200px) 100vw, 100vw"
+        quality={100}
         className="object-cover"
         priority={currentIndex === 0}
         onLoad={() => setIsLoaded(true)}
