@@ -1,0 +1,182 @@
+'use client';
+
+import Image from "next/image";
+import { motion, AnimatePresence } from "framer-motion";
+import { useState, useEffect } from "react";
+import AnimatedSection from "./components/AnimatedSection";
+import ImageSlider from "./components/ImageSlider";
+
+export default function Home() {
+  const [currentSection, setCurrentSection] = useState(0);
+  const totalSections = 9;
+  const [isVideoVisible, setIsVideoVisible] = useState(false);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      const newSection = Math.round(window.scrollY / window.innerHeight);
+      setCurrentSection(newSection);
+      setIsVideoVisible(newSection === 5);
+    };
+
+    handleScroll(); // 초기 로드 시 실행
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+
+  // 이미지 슬라이더용 이미지 배열 - 실제 이미지 확인
+  const memoryImages = Array.from({ length: 30 }, (_, i) => `/images/memories/image${i + 1}.png`);
+
+  // 이미지 존재 여부 확인
+  useEffect(() => {
+    memoryImages.forEach(src => {
+      const img = document.createElement('img');
+      img.src = src;
+    });
+  }, [memoryImages]);
+
+  return (
+    <main className="h-screen overflow-y-scroll snap-y snap-mandatory">
+      {/* Sections 1-5: Dark Background */}
+      {[
+        "순간들의 기억으로 우리는 살아갑니다.",
+        "청명은 그런 기억들을 청춘이라는 이름으로 꽉꽉 눌러담아 왔습니다.",
+        "그런 아름다운 시간들은 흐르고 흘러",
+        "벌써 1주년이 되었습니다.",
+        "청명은 평생을 추억할만한 날들을 살아가는 청춘들의 이야기입니다."
+      ].map((text, index) => (
+        <section key={index} className="h-screen flex items-center justify-center bg-black text-white relative snap-start">
+          {index === 2 && (
+            <div className="absolute inset-0 z-0 opacity-70">
+              <ImageSlider images={memoryImages} interval={4000} />
+            </div>
+          )}
+          <div className={`absolute inset-0 z-10 ${index === 2 ? 'bg-black/60' : ''}`} />
+          <AnimatedSection className="relative z-20 text-center max-w-6xl mx-auto px-4">
+            <p className="text-4xl md:text-6xl font-light leading-relaxed tracking-wide">
+              {text}
+            </p>
+          </AnimatedSection>
+        </section>
+      ))}
+
+      {/* Section 6: Concert Title with Video Background */}
+      <section className="h-screen flex items-center justify-center relative snap-start overflow-hidden">
+        <div className="absolute inset-0 z-0">
+          <video
+            key={isVideoVisible ? 'visible' : 'hidden'}
+            autoPlay
+            muted
+            loop
+            playsInline
+            className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-1000 ${
+              isVideoVisible ? 'opacity-100' : 'opacity-0'
+            }`}
+          >
+            <source src="/background.mp4" type="video/mp4" />
+          </video>
+        </div>
+        <div className={`absolute inset-0 bg-black transition-opacity duration-1000 ${
+          isVideoVisible ? 'opacity-50' : 'opacity-100'
+        } z-10`} />
+        <AnimatedSection className="relative z-20 text-center text-white">
+          <h1 className="text-8xl md:text-[12rem] font-bold mb-4">초랑</h1>
+          <div className="text-9xl md:text-[14rem] font-bold mb-8">初浪</div>
+          <p className="text-3xl md:text-5xl font-light tracking-widest">첫번째 파도</p>
+        </AnimatedSection>
+      </section>
+
+      {/* Section 7: Invitation */}
+      <section className="h-screen flex items-center justify-center bg-blue-900 text-white snap-start">
+        <AnimatedSection className="text-center max-w-6xl mx-auto px-4">
+          <p className="text-4xl md:text-6xl font-light tracking-wide leading-relaxed">
+            밝고, 맑고, 푸른 날에 함께해주세요.
+          </p>
+        </AnimatedSection>
+      </section>
+
+      {/* Section 8: Poster */}
+      <section className="h-screen flex items-center justify-center bg-gradient-to-b from-blue-900 to-blue-800 text-white snap-start">
+        <div className="max-w-4xl mx-auto px-4 py-20">
+          <AnimatedSection>
+            <div className="relative max-w-lg mx-auto">
+              <div className="aspect-[3/4] relative">
+                <Image
+                  src="/poster.png"
+                  alt="Concert Poster"
+                  fill
+                  className="rounded-lg shadow-2xl object-contain"
+                />
+              </div>
+              <div className="mt-12 text-center">
+                <p className="text-2xl md:text-3xl mb-4">맑고 흐림이 없는 그런 날,</p>
+                <p className="text-2xl md:text-3xl mb-8">BAND청명 단독 공연</p>
+                <p className="text-xl md:text-2xl mt-8">2025.05.04 오후 7시</p>
+                <p className="text-xl md:text-2xl">강남 필소라이브홀</p>
+              </div>
+            </div>
+          </AnimatedSection>
+        </div>
+      </section>
+
+      {/* Section 9: Registration Form */}
+      <section className="h-screen flex items-center justify-center bg-white snap-start">
+        <AnimatedSection className="max-w-2xl mx-auto px-4 py-20">
+          <h2 className="text-4xl md:text-5xl font-bold mb-16 text-center">참가 신청</h2>
+          <form className="space-y-8">
+            <div>
+              <label htmlFor="name" className="block text-lg font-medium text-gray-700 mb-2">이름</label>
+              <input
+                type="text"
+                id="name"
+                name="name"
+                className="mt-2 block w-full rounded-md border px-4 py-3 text-lg focus:border-blue-500 focus:ring-blue-500"
+              />
+            </div>
+            <div>
+              <label htmlFor="email" className="block text-lg font-medium text-gray-700 mb-2">이메일</label>
+              <input
+                type="email"
+                id="email"
+                name="email"
+                className="mt-2 block w-full rounded-md border px-4 py-3 text-lg focus:border-blue-500 focus:ring-blue-500"
+              />
+            </div>
+            <div>
+              <label htmlFor="phone" className="block text-lg font-medium text-gray-700 mb-2">연락처</label>
+              <input
+                type="tel"
+                id="phone"
+                name="phone"
+                className="mt-2 block w-full rounded-md border px-4 py-3 text-lg focus:border-blue-500 focus:ring-blue-500"
+              />
+            </div>
+            <button
+              type="submit"
+              className="w-full bg-blue-600 text-white py-4 px-6 rounded-md hover:bg-blue-700 transition-colors text-xl font-medium mt-8"
+            >
+              신청하기
+            </button>
+          </form>
+        </AnimatedSection>
+      </section>
+
+      {/* Navigation Dots */}
+      <div className="fixed right-6 top-1/2 transform -translate-y-1/2 space-y-3 z-50">
+        {[...Array(totalSections)].map((_, i) => (
+          <button
+            key={i}
+            onClick={() => {
+              window.scrollTo({
+                top: i * window.innerHeight,
+                behavior: 'smooth'
+              });
+            }}
+            className={`w-4 h-4 rounded-full transition-all duration-300 ${
+              currentSection === i ? 'bg-blue-500 scale-125' : 'bg-gray-400 hover:bg-blue-300'
+            }`}
+          />
+        ))}
+      </div>
+    </main>
+  );
+}
