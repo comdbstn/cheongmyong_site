@@ -1,8 +1,7 @@
 'use client';
 
-import { motion, AnimatePresence } from 'framer-motion';
-import { useState, useEffect } from 'react';
-import Image from 'next/image';
+import { useState, useEffect } from "react";
+import Image from "next/image";
 
 interface ImageSliderProps {
   images: string[];
@@ -12,6 +11,7 @@ interface ImageSliderProps {
 export default function ImageSlider({ images, interval = 3000 }: ImageSliderProps) {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isLoading, setIsLoading] = useState(true);
+  const [loadedImages, setLoadedImages] = useState<Set<number>>(new Set());
 
   useEffect(() => {
     const timer = setInterval(() => {
@@ -21,35 +21,42 @@ export default function ImageSlider({ images, interval = 3000 }: ImageSliderProp
     return () => clearInterval(timer);
   }, [images.length, interval]);
 
+  const handleImageLoad = (index: number) => {
+    setLoadedImages(prev => {
+      const newSet = new Set(prev);
+      newSet.add(index);
+      return newSet;
+    });
+    if (index === 0) {
+      setIsLoading(false);
+    }
+  };
+
   return (
-    <div className="relative w-full h-full overflow-hidden">
-      <AnimatePresence mode="wait">
-        <motion.div
-          key={currentIndex}
-          initial={{ opacity: 0, y: 100 }}
-          animate={{ opacity: 1, y: 0 }}
-          exit={{ opacity: 0, y: -100 }}
-          transition={{ duration: 0.5 }}
-          className="absolute inset-0"
+    <div className="relative w-full h-full">
+      {images.map((src, index) => (
+        <div
+          key={src}
+          className={`absolute inset-0 transition-opacity duration-1000 ${
+            currentIndex === index ? 'opacity-100' : 'opacity-0'
+          }`}
         >
-          <div className="relative w-full h-full">
-            <Image
-              src={images[currentIndex]}
-              alt={`Memory ${currentIndex + 1}`}
-              fill
-              className="object-cover"
-              priority={currentIndex === 0}
-              onLoadingComplete={() => setIsLoading(false)}
-              sizes="100vw"
-            />
-            {isLoading && (
-              <div className="absolute inset-0 bg-black/50 flex items-center justify-center">
-                <div className="w-16 h-16 border-4 border-blue-500 border-t-transparent rounded-full animate-spin" />
-              </div>
-            )}
-          </div>
-        </motion.div>
-      </AnimatePresence>
+          <Image
+            src={src}
+            alt={`Memory ${index + 1}`}
+            fill
+            className="object-cover"
+            priority={index === 0}
+            onLoadingComplete={() => handleImageLoad(index)}
+            sizes="100vw"
+          />
+        </div>
+      ))}
+      {isLoading && (
+        <div className="absolute inset-0 bg-black/50 flex items-center justify-center">
+          <div className="w-16 h-16 border-4 border-blue-500 border-t-transparent rounded-full animate-spin" />
+        </div>
+      )}
     </div>
   );
 } 

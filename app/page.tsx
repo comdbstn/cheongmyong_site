@@ -1,7 +1,7 @@
 'use client';
 
 import { motion } from "framer-motion";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import AnimatedSection from "./components/AnimatedSection";
 import ImageSlider from "./components/ImageSlider";
 
@@ -10,6 +10,8 @@ export default function Home() {
   const totalSections = 9;
   const [isVideoVisible, setIsVideoVisible] = useState(false);
   const [isBackgroundOpen, setIsBackgroundOpen] = useState(false);
+  const [isInitialized, setIsInitialized] = useState(false);
+  const videoRef = useRef<HTMLVideoElement>(null);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -24,13 +26,27 @@ export default function Home() {
       }
     };
 
-    handleScroll();
+    const initialize = () => {
+      handleScroll();
+      setIsInitialized(true);
+    };
+
     window.addEventListener('scroll', handleScroll);
+    initialize();
+
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
   // 이미지 슬라이더용 이미지 배열
   const memoryImages = Array.from({ length: 24 }, (_, i) => `/images/memories/image${i + 1}.png`);
+
+  if (!isInitialized) {
+    return (
+      <div className="fixed inset-0 flex items-center justify-center bg-black">
+        <div className="w-16 h-16 border-4 border-blue-500 border-t-transparent rounded-full animate-spin" />
+      </div>
+    );
+  }
 
   return (
     <main className="h-screen overflow-y-scroll snap-y snap-mandatory">
@@ -46,12 +62,14 @@ export default function Home() {
             isVideoVisible ? 'opacity-100' : 'opacity-0'
           }`}>
             <video
+              ref={videoRef}
               key="background-video"
               autoPlay
               muted
               loop
               playsInline
               className="absolute inset-0 w-full h-full object-cover"
+              preload="auto"
             >
               <source src="/background.mp4" type="video/mp4" />
             </video>
