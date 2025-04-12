@@ -11,7 +11,6 @@ interface ImageSliderProps {
 export default function ImageSlider({ images, interval = 3000 }: ImageSliderProps) {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isLoading, setIsLoading] = useState(true);
-  const [loadedImages, setLoadedImages] = useState<Set<number>>(new Set());
 
   useEffect(() => {
     const timer = setInterval(() => {
@@ -20,17 +19,6 @@ export default function ImageSlider({ images, interval = 3000 }: ImageSliderProp
 
     return () => clearInterval(timer);
   }, [images.length, interval]);
-
-  const handleImageLoad = (index: number) => {
-    setLoadedImages(prev => {
-      const newSet = new Set(prev);
-      newSet.add(index);
-      return newSet;
-    });
-    if (index === 0) {
-      setIsLoading(false);
-    }
-  };
 
   return (
     <div className="relative w-full h-full">
@@ -47,7 +35,7 @@ export default function ImageSlider({ images, interval = 3000 }: ImageSliderProp
             fill
             className="object-cover"
             priority={index === 0}
-            onLoadingComplete={() => handleImageLoad(index)}
+            onLoadingComplete={() => index === 0 && setIsLoading(false)}
             sizes="100vw"
           />
         </div>
