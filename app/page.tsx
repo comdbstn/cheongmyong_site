@@ -37,7 +37,7 @@ export default function Home() {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
-  // 이미지 슬라이더용 이미지 배열
+  // 이미지 슬라이더용 이미지 배열 - 실제 이미지 경로 수정
   const memoryImages = Array.from({ length: 24 }, (_, i) => `/images/memories/image${i + 1}.png`);
 
   if (!isInitialized) {
