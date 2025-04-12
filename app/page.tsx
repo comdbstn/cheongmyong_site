@@ -1,6 +1,5 @@
 'use client';
 
-import { motion } from "framer-motion";
 import { useState, useEffect, useRef } from "react";
 import AnimatedSection from "./components/AnimatedSection";
 import ImageSlider from "./components/ImageSlider";
@@ -9,7 +8,6 @@ export default function Home() {
   const [currentSection, setCurrentSection] = useState(0);
   const totalSections = 9;
   const [isVideoVisible, setIsVideoVisible] = useState(false);
-  const [isVideoLoaded, setIsVideoLoaded] = useState(false);
   const videoRef = useRef<HTMLVideoElement>(null);
   const [isMounted, setIsMounted] = useState(false);
 
