@@ -11,11 +11,10 @@ interface ImageSliderProps {
 
 export default function ImageSlider({ images, interval = 3000 }: ImageSliderProps) {
   const [currentIndex, setCurrentIndex] = useState(0);
-  const [isLoaded, setIsLoaded] = useState(false);
 
   useEffect(() => {
     const timer = setInterval(() => {
-      setCurrentIndex((prev) => (prev + 1) % images.length);
+      setCurrentIndex((prevIndex) => (prevIndex + 1) % images.length);
     }, interval);
 
     return () => clearInterval(timer);
@@ -39,7 +38,7 @@ export default function ImageSlider({ images, interval = 3000 }: ImageSliderProp
               fill
               className="object-cover"
               priority={currentIndex === 0}
-              onLoadingComplete={() => setIsLoaded(true)}
+              onLoadingComplete={() => {}}
               sizes="100vw"
             />
           </div>
