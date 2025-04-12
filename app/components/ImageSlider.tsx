@@ -11,6 +11,7 @@ interface ImageSliderProps {
 
 export default function ImageSlider({ images, interval = 3000 }: ImageSliderProps) {
   const [currentIndex, setCurrentIndex] = useState(0);
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     const timer = setInterval(() => {
@@ -38,9 +39,14 @@ export default function ImageSlider({ images, interval = 3000 }: ImageSliderProp
               fill
               className="object-cover"
               priority={currentIndex === 0}
-              onLoadingComplete={() => {}}
+              onLoadingComplete={() => setIsLoading(false)}
               sizes="100vw"
             />
+            {isLoading && (
+              <div className="absolute inset-0 bg-black/50 flex items-center justify-center">
+                <div className="w-16 h-16 border-4 border-blue-500 border-t-transparent rounded-full animate-spin" />
+              </div>
+            )}
           </div>
         </motion.div>
       </AnimatePresence>

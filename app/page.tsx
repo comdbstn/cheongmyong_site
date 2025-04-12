@@ -11,6 +11,7 @@ export default function Home() {
   const totalSections = 9;
   const [isVideoVisible, setIsVideoVisible] = useState(false);
   const [isBackgroundOpen, setIsBackgroundOpen] = useState(false);
+  const [isVideoLoaded, setIsVideoLoaded] = useState(false);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -30,16 +31,8 @@ export default function Home() {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
-  // 이미지 슬라이더용 이미지 배열 - 실제 이미지 확인
-  const memoryImages = Array.from({ length: 30 }, (_, i) => `/images/memories/image${i + 1}.png`);
-
-  // 이미지 존재 여부 확인
-  useEffect(() => {
-    memoryImages.forEach(src => {
-      const img = document.createElement('img');
-      img.src = src;
-    });
-  }, [memoryImages]);
+  // 이미지 슬라이더용 이미지 배열
+  const memoryImages = Array.from({ length: 24 }, (_, i) => `/images/memories/image${i + 1}.png`);
 
   return (
     <main className="h-screen overflow-y-scroll snap-y snap-mandatory">
@@ -61,6 +54,7 @@ export default function Home() {
               loop
               playsInline
               className="absolute inset-0 w-full h-full object-cover"
+              onLoadedData={() => setIsVideoLoaded(true)}
             >
               <source src="/background.mp4" type="video/mp4" />
             </video>
@@ -87,7 +81,7 @@ export default function Home() {
           )}
           <div className={`absolute inset-0 z-10 ${index === 2 ? 'bg-black/60' : ''}`} />
           <AnimatedSection className="relative z-20 text-center max-w-6xl mx-auto px-4">
-            <p className="text-4xl md:text-6xl font-light leading-relaxed tracking-wide">
+            <p className="text-5xl md:text-7xl font-light leading-relaxed tracking-wide">
               {text}
             </p>
           </AnimatedSection>
@@ -102,9 +96,9 @@ export default function Home() {
             animate={{ opacity: isBackgroundOpen ? 1 : 0, scale: isBackgroundOpen ? 1 : 0.8 }}
             transition={{ delay: 0.5, duration: 0.8 }}
           >
-            <h1 className="text-8xl md:text-[12rem] font-bold mb-4">초랑</h1>
-            <div className="text-9xl md:text-[14rem] font-bold mb-8">初浪</div>
-            <p className="text-3xl md:text-5xl font-light tracking-widest">첫번째 파도</p>
+            <h1 className="text-9xl md:text-[14rem] font-bold mb-4">초랑</h1>
+            <div className="text-[10rem] md:text-[16rem] font-bold mb-8">初浪</div>
+            <p className="text-4xl md:text-6xl font-light tracking-widest">첫번째 파도</p>
           </motion.div>
         </AnimatedSection>
       </section>
@@ -112,7 +106,7 @@ export default function Home() {
       {/* Section 7: Invitation */}
       <section className="h-screen flex items-center justify-center relative snap-start">
         <AnimatedSection className="relative z-20 text-center max-w-6xl mx-auto px-4">
-          <p className="text-4xl md:text-6xl font-light tracking-wide leading-relaxed text-white">
+          <p className="text-5xl md:text-7xl font-light tracking-wide leading-relaxed text-white">
             밝고, 맑고, 푸른 날에 함께해주세요.
           </p>
         </AnimatedSection>
@@ -123,19 +117,16 @@ export default function Home() {
         <div className="relative z-20 max-w-4xl mx-auto px-4 py-20">
           <AnimatedSection>
             <div className="relative max-w-lg mx-auto">
-              <div className="aspect-[3/4] relative">
-                <Image
-                  src="/poster.png"
-                  alt="Concert Poster"
-                  fill
-                  className="rounded-lg shadow-2xl object-contain"
-                />
+              <div className="aspect-[3/4] relative bg-blue-900/50 rounded-lg shadow-2xl flex items-center justify-center">
+                <p className="text-4xl md:text-5xl text-white text-center p-8">
+                  공연 포스터 준비 중
+                </p>
               </div>
               <div className="mt-12 text-center text-white">
-                <p className="text-2xl md:text-3xl mb-4">맑고 흐림이 없는 그런 날,</p>
-                <p className="text-2xl md:text-3xl mb-8">BAND청명 단독 공연</p>
-                <p className="text-xl md:text-2xl mt-8">2025.05.04 오후 7시</p>
-                <p className="text-xl md:text-2xl">강남 필소라이브홀</p>
+                <p className="text-3xl md:text-4xl mb-4">맑고 흐림이 없는 그런 날,</p>
+                <p className="text-3xl md:text-4xl mb-8">BAND청명 단독 공연</p>
+                <p className="text-2xl md:text-3xl mt-8">2025.05.04 오후 7시</p>
+                <p className="text-2xl md:text-3xl">강남 필소라이브홀</p>
               </div>
             </div>
           </AnimatedSection>
@@ -146,38 +137,38 @@ export default function Home() {
       <section className="h-screen flex items-center justify-center relative snap-start">
         <AnimatedSection className="relative z-20 max-w-2xl mx-auto px-4 py-20">
           <div className="bg-white/90 rounded-xl p-8 backdrop-blur-sm">
-            <h2 className="text-4xl md:text-5xl font-bold mb-16 text-center">참가 신청</h2>
+            <h2 className="text-5xl md:text-6xl font-bold mb-16 text-center">참가 신청</h2>
             <form className="space-y-8">
               <div>
-                <label htmlFor="name" className="block text-lg font-medium text-gray-700 mb-2">이름</label>
+                <label htmlFor="name" className="block text-2xl font-medium text-gray-700 mb-2">이름</label>
                 <input
                   type="text"
                   id="name"
                   name="name"
-                  className="mt-2 block w-full rounded-md border px-4 py-3 text-lg focus:border-blue-500 focus:ring-blue-500"
+                  className="mt-2 block w-full rounded-md border px-4 py-3 text-xl focus:border-blue-500 focus:ring-blue-500"
                 />
               </div>
               <div>
-                <label htmlFor="email" className="block text-lg font-medium text-gray-700 mb-2">이메일</label>
+                <label htmlFor="email" className="block text-2xl font-medium text-gray-700 mb-2">이메일</label>
                 <input
                   type="email"
                   id="email"
                   name="email"
-                  className="mt-2 block w-full rounded-md border px-4 py-3 text-lg focus:border-blue-500 focus:ring-blue-500"
+                  className="mt-2 block w-full rounded-md border px-4 py-3 text-xl focus:border-blue-500 focus:ring-blue-500"
                 />
               </div>
               <div>
-                <label htmlFor="phone" className="block text-lg font-medium text-gray-700 mb-2">연락처</label>
+                <label htmlFor="phone" className="block text-2xl font-medium text-gray-700 mb-2">연락처</label>
                 <input
                   type="tel"
                   id="phone"
                   name="phone"
-                  className="mt-2 block w-full rounded-md border px-4 py-3 text-lg focus:border-blue-500 focus:ring-blue-500"
+                  className="mt-2 block w-full rounded-md border px-4 py-3 text-xl focus:border-blue-500 focus:ring-blue-500"
                 />
               </div>
               <button
                 type="submit"
-                className="w-full bg-blue-600 text-white py-4 px-6 rounded-md hover:bg-blue-700 transition-colors text-xl font-medium mt-8"
+                className="w-full bg-blue-600 text-white py-4 px-6 rounded-md hover:bg-blue-700 transition-colors text-2xl font-medium mt-8"
               >
                 신청하기
               </button>
@@ -197,7 +188,7 @@ export default function Home() {
                 behavior: 'smooth'
               });
             }}
-            className={`w-4 h-4 rounded-full transition-all duration-300 ${
+            className={`w-5 h-5 rounded-full transition-all duration-300 ${
               currentSection === i ? 'bg-blue-500 scale-125' : 'bg-gray-400 hover:bg-blue-300'
             }`}
           />
