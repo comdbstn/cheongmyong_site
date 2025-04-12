@@ -1,19 +1,15 @@
-import type { NextConfig } from "next";
-
-const nextConfig: NextConfig = {
+/** @type {import('next').NextConfig} */
+const nextConfig = {
+  output: "standalone",
   images: {
-    domains: [],
+    unoptimized: true,
   },
-  webpack: (config) => {
+  webpack: (config: any) => {
     config.module.rules.push({
       test: /\.(mp4|webm)$/,
-      use: {
-        loader: 'file-loader',
-        options: {
-          publicPath: '/_next/static/videos/',
-          outputPath: 'static/videos/',
-          name: '[name].[hash].[ext]',
-        },
+      type: 'asset/resource',
+      generator: {
+        filename: 'static/media/[name].[hash][ext]',
       },
     });
     return config;

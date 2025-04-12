@@ -39,6 +39,46 @@ export default function Home() {
 
   // 이미지 슬라이더용 이미지 배열 - 실제 이미지 경로 수정
   const memoryImages = Array.from({ length: 24 }, (_, i) => `/images/memories/image${i + 1}.png`);
+  
+  // 슬라이더 텍스트
+  const sliderTexts = [
+    "청명 1주년",
+    "그 시간들을 기억합니다",
+    "음악과 열정",
+    "함께했던 무대",
+    "그리고 청춘"
+  ];
+
+  // 이미지 프리로딩
+  useEffect(() => {
+    memoryImages.forEach(src => {
+      const img = document.createElement('img');
+      img.src = src;
+    });
+  }, [memoryImages]);
+
+  // 비디오 로딩
+  useEffect(() => {
+    try {
+      if (isVideoVisible && videoRef.current) {
+        videoRef.current.load();
+        console.log('비디오 로딩 시도...');
+        
+        videoRef.current.onloadeddata = () => {
+          console.log('비디오 로딩 완료');
+          videoRef.current?.play()
+            .then(() => console.log('비디오 재생 시작'))
+            .catch(e => console.error('비디오 재생 오류:', e));
+        };
+        
+        videoRef.current.onerror = (e) => {
+          console.error('비디오 로딩 오류:', e);
+        };
+      }
+    } catch (error) {
+      console.error('비디오 처리 중 오류 발생:', error);
+    }
+  }, [isVideoVisible]);
 
   if (!isInitialized) {
     return (
@@ -50,32 +90,6 @@ export default function Home() {
 
   return (
     <main className="h-screen overflow-y-scroll snap-y snap-mandatory">
-      {/* Background Video Container - Fixed position for sections 6-9 */}
-      <div className="fixed inset-0 z-0 overflow-hidden">
-        <motion.div
-          initial={{ scaleX: 0 }}
-          animate={{ scaleX: isBackgroundOpen ? 1 : 0 }}
-          transition={{ duration: 1, ease: "easeInOut" }}
-          className="w-full h-full origin-center"
-        >
-          <div className={`w-full h-full transition-opacity duration-1000 ${
-            isVideoVisible ? 'opacity-100' : 'opacity-0'
-          }`}>
-            <div className="relative w-full h-full">
-              <div className="absolute inset-0 bg-black/50 z-10" />
-              <video
-                src="/background.mp4"
-                autoPlay
-                muted
-                loop
-                playsInline
-                className="absolute inset-0 w-full h-full object-cover"
-              />
-            </div>
-          </div>
-        </motion.div>
-      </div>
-
       {/* Sections 1-5: Dark Background */}
       {[
         "순간들의 기억으로 우리는 살아갑니다.",
@@ -85,26 +99,48 @@ export default function Home() {
         "청명은 평생을 추억할만한 날들을 살아가는 청춘들의 이야기입니다."
       ].map((text, index) => (
         <section key={index} className="h-screen flex items-center justify-center bg-black text-white relative snap-start">
-          {index === 2 && (
-            <div className="absolute inset-0 z-0 opacity-70">
-              <motion.div
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                transition={{ duration: 1 }}
-                className="w-full h-full"
-              >
+          {index === 2 ? (
+            <div className="relative z-20 flex flex-col items-center justify-center w-full h-full">
+              <AnimatedSection className="text-center w-full max-w-[90%] md:max-w-[80%] lg:max-w-[1200px] mx-auto mb-4 md:mb-6 lg:mb-8 px-4">
+                <p className="text-3xl md:text-5xl lg:text-7xl font-light mb-8 md:mb-10 lg:mb-12">
+                  {text}
+                </p>
+              </AnimatedSection>
+              <div className="relative w-full h-[300px] flex items-center justify-center">
                 <ImageSlider images={memoryImages} />
-              </motion.div>
+              </div>
             </div>
+          ) : (
+            <AnimatedSection className="relative z-20 text-center w-full max-w-[90%] md:max-w-[80%] lg:max-w-[1200px] mx-auto px-4">
+              <p className="text-3xl md:text-5xl lg:text-7xl font-light leading-relaxed tracking-wide">
+                {text}
+              </p>
+            </AnimatedSection>
           )}
-          <div className={`absolute inset-0 z-10 ${index === 2 ? 'bg-black/60' : ''}`} />
-          <AnimatedSection className="relative z-20 text-center max-w-6xl mx-auto px-4">
-            <p className="text-5xl md:text-7xl font-light leading-relaxed tracking-wide">
-              {text}
-            </p>
-          </AnimatedSection>
         </section>
       ))}
+
+      {/* Background Video - Fixed position for sections 6-9 */}
+      <div className="fixed inset-0 z-0 overflow-hidden">
+        <div className={`w-full h-full transition-opacity duration-1000 ${
+          isVideoVisible ? 'opacity-100' : 'opacity-0'
+        }`}>
+          <div className="relative w-full h-full">
+            <div className="absolute inset-0 bg-black/50 z-10" />
+            {isVideoVisible && (
+              <video
+                ref={videoRef}
+                src="/background.mp4"
+                muted
+                autoPlay
+                playsInline
+                loop
+                className="absolute inset-0 w-full h-full object-cover"
+              />
+            )}
+          </div>
+        </div>
+      </div>
 
       {/* Section 6: Concert Title */}
       <section className="h-screen flex items-center justify-center relative snap-start overflow-hidden">
